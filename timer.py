@@ -88,8 +88,8 @@ class Timer(QWidget):
                 padding: 20px;
             }
             QLabel{
-                font-size: 100px;
-                font-family: Bahnschrift;
+                font-size: 80px;
+                font-family: Monofonto;
                 font-weight: bold;
                 color: rgb(50, 255, 50);
                 background-color: black;
@@ -109,6 +109,7 @@ class Timer(QWidget):
 
     def update_display(self):
         self.format_time()
+        self.display.setText(self.formatted_time)
 
     def on_switch_button_pushed(self):
         sender = self.sender()
@@ -129,7 +130,8 @@ class Timer(QWidget):
         self.timer.stop()
 
     def reset_timer(self):
-        print("Timer reset")
+        self.elapsed_timer.restart()
+        self.display.setText("00:00:00.00")
 
     def format_time(self):
         elapsed_msec = self.elapsed_timer.elapsed()
@@ -137,4 +139,5 @@ class Timer(QWidget):
         seconds = elapsed_msec // 1000 % 60
         minutes = elapsed_msec // 1000 // 60 % 60
         hours = elapsed_msec // 1000 // 60 // 60
-        print(f"{hours:02}:{minutes:02}:{seconds:02}.{milliseconds:02}")
+        self.formatted_time = f"{hours:02}:{minutes:02}:{seconds:02}.{milliseconds:02}"
+        return self.formatted_time
