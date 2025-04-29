@@ -108,8 +108,7 @@ class Timer(QWidget):
 
 
     def update_display(self):
-        self.format_time()
-        self.display.setText(self.formatted_time)
+        self.display.setText(self.format_time())
 
     def on_switch_button_pushed(self):
         sender = self.sender()
