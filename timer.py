@@ -35,9 +35,12 @@ class Timer(QWidget):
 
         # Other
         self.display = QLabel(self)
+        self.millisecond_save = 0
         self.timer = QTimer()
         self.elapsed_timer = QElapsedTimer()
         self.formatted_time = ""
+        self.elapsed_msec = 0
+        self.start_active = False
 
         #Method calls
         self.initUI()
@@ -122,21 +125,30 @@ class Timer(QWidget):
         self.button_timer.setChecked(True)
 
     def start_timer(self):
-        self.timer.start(10)
-        self.elapsed_timer.start()
+        if not self.start_active:
+            self.timer.start(10)
+            self.elapsed_timer.start()
+        self.start_active = True
 
     def stop_timer(self):
+        self.start_active = False
         self.timer.stop()
+        self.save_time()
 
     def reset_timer(self):
+        self.start_active = False
         self.elapsed_timer.restart()
         self.display.setText("00:00:00.00")
+        self.millisecond_save = 0
 
     def format_time(self):
-        elapsed_msec = self.elapsed_timer.elapsed()
-        milliseconds = elapsed_msec % 1000 // 10
-        seconds = elapsed_msec // 1000 % 60
-        minutes = elapsed_msec // 1000 // 60 % 60
-        hours = elapsed_msec // 1000 // 60 // 60
+        self.elapsed_msec = self.elapsed_timer.elapsed() + self.millisecond_save
+        milliseconds = self.elapsed_msec % 1000 // 10
+        seconds = self.elapsed_msec // 1000 % 60
+        minutes = self.elapsed_msec // 1000 // 60 % 60
+        hours = self.elapsed_msec // 1000 // 60 // 60
         self.formatted_time = f"{hours:02}:{minutes:02}:{seconds:02}.{milliseconds:02}"
         return self.formatted_time
+
+    def save_time(self):
+        self.millisecond_save = self.elapsed_msec
