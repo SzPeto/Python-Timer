@@ -1,3 +1,5 @@
+import webbrowser
+
 from PyQt5.QtCore import QTimer, QTime, Qt, QElapsedTimer
 from PyQt5.QtGui import QGuiApplication
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QButtonGroup
@@ -15,6 +17,7 @@ class Timer(QWidget):
         self.vbox = QVBoxLayout(self)
         self.hbox = QHBoxLayout(self)
         self.hbox_2 = QHBoxLayout(self)
+        self.hbox_support_me = QHBoxLayout()
 
         # Buttons
         self.button_group = QButtonGroup()
@@ -23,10 +26,11 @@ class Timer(QWidget):
         self.button_start = QPushButton("Start", self)
         self.button_stop = QPushButton("Stop", self)
         self.button_reset = QPushButton("Reset", self)
+        self.support_me_button = QPushButton("Support me")
 
         #Dimensions
         self.window_width = 600
-        self.window_height = 312
+        self.window_height = 370
         self.monitor = QGuiApplication.primaryScreen().geometry()
         self.monitor_width = self.monitor.width()
         self.monitor_height = self.monitor.height()
@@ -34,6 +38,7 @@ class Timer(QWidget):
         self.window_y = 0
 
         # Other
+        self.setWindowIcon(self.main_window.app_icon)
         self.display = QLabel(self)
         self.millisecond_save = 0
         self.timer = QTimer()
@@ -47,6 +52,7 @@ class Timer(QWidget):
 
     def initUI(self):
         # Buttons
+        self.support_me_button.setObjectName("supportMeButton")
         self.button_clock.setCheckable(True)
         self.button_timer.setCheckable(True)
         self.button_group.addButton(self.button_clock)
@@ -71,9 +77,11 @@ class Timer(QWidget):
         self.hbox_2.addWidget(self.button_start)
         self.hbox_2.addWidget(self.button_stop)
         self.hbox_2.addWidget(self.button_reset)
+        self.hbox_support_me.addWidget(self.support_me_button, alignment = Qt.AlignHCenter)
         self.vbox.addLayout(self.hbox)
         self.vbox.addWidget(self.display)
         self.vbox.addLayout(self.hbox_2)
+        self.vbox.addLayout(self.hbox_support_me)
 
         # Event handling and misc.
         self.timer.timeout.connect(self.update_display)
@@ -81,32 +89,45 @@ class Timer(QWidget):
         self.button_start.clicked.connect(self.start_timer)
         self.button_stop.clicked.connect(self.stop_timer)
         self.button_reset.clicked.connect(self.reset_timer)
-        self.setWindowTitle("Digital clock and timer")
+        self.setWindowTitle("Digital clock and timer by Peter Szepesi")
         self.display.setText("00:00:00.00")
+        self.support_me_button.clicked.connect(self.support_me)
         self.setStyleSheet("""
             Timer{
                 background-color: rgb(230, 230, 255);
             }
+            
             QLabel, QPushButton{
                 padding: 20px;
             }
+            
             QLabel{
                 font-size: 80px;
-                font-family: Monofonto;
+                font-family: Consolas;
                 font-weight: bold;
                 color: rgb(50, 255, 50);
                 background-color: black;
             }
+            
             QPushButton{
                 font-size: 20px;
-                font-family: Bahnschrift;
+                font-family: segoe UI;
                 font-weight: bold;
             }
+            
             QPushButton:hover{
                 background-color: white;
                 border-radius: 3px;
                 border: 1px solid black
             }
+            
+            QPushButton#supportMeButton{
+                font-size: 20px;
+                font-family: Segoe UI;
+                font-weight: normal;
+                padding: 7px;
+            }
+            
         """)
 
 
@@ -152,3 +173,6 @@ class Timer(QWidget):
 
     def save_time(self):
         self.millisecond_save = self.elapsed_msec
+
+    def support_me(self):
+        webbrowser.open("https://www.paypal.me/szpeto")
