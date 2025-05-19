@@ -122,7 +122,7 @@ class Timer(QWidget):
             }
             
             QPushButton#supportMeButton{
-                font-size: 20px;
+                font-size: 15px;
                 font-family: Segoe UI;
                 font-weight: normal;
                 padding: 7px;
